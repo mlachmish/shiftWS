@@ -45,6 +45,12 @@ public class Main {
          days.add(22);
          BusinessShift shift = new BusinessShift(1, days, Time.valueOf( "08:00:00" ), Time.valueOf( "14:30:00" ), crew);
          session.persist(shift);
+         
+         Set<Integer> days2 = new HashSet<>();
+         days2.add(214);
+         days2.add(222);
+         BusinessShift shift2 = new BusinessShift(1, days2, Time.valueOf( "18:00:00" ), Time.valueOf( "24:30:00" ), crew);
+         session.persist(shift2);
          ExtraAbsenceRequest e = new ExtraAbsenceRequest(3, 2, "just cause", RequestStatusEnum.Pending);
          session.persist(e);
          tx.commit();

@@ -31,6 +31,9 @@ public class User {
 	@Column (name="business_id")
 	private long businessId;
 	
+	@Column (name="fb_access_token")
+	private String fbAccessToken;
+	
 	public User() {}
 
 	public User(String firstName, String lastName, String countryCode,
