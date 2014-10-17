@@ -32,6 +32,7 @@
    <mapping class="com.shiftapp.ws.model.ExtraAbsenceRequest"/>
    <mapping class="com.shiftapp.ws.model.JoinRequest"/>
    <mapping class="com.shiftapp.ws.model.MissingShift"/>
+   <mapping class="com.shiftapp.ws.model.NumberAuthentication"/>
    <mapping class="com.shiftapp.ws.model.ShiftRequest"/>
    <mapping class="com.shiftapp.ws.model.User"/>
    <mapping class="com.shiftapp.ws.model.WeeklySchedule"/>
