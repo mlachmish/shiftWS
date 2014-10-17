@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.hibernate.Criteria;
@@ -25,7 +26,7 @@ public class SignUpAPI {
 	private SessionFactory sessionFactory;
 	
 	@GET
-	@Produces({"application/json"})
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(@QueryParam("phoneNumber") String phoneNumber) {
 
 		List results = null;
