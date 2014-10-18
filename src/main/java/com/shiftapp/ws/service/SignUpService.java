@@ -2,8 +2,7 @@ package com.shiftapp.ws.service;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +15,7 @@ import com.shiftapp.ws.model.User;
 
 public class SignUpService implements ISignUpService{
 
-	private static final Logger logger = LogManager.getLogger(SignUpService.class);
+	private static final Logger logger = Logger.getLogger(SignUpService.class);
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -24,7 +23,6 @@ public class SignUpService implements ISignUpService{
 	@Override
 	@Transactional(readOnly=true)
 	public boolean lookup(String countryCode, String phoneNumber) {
-		logger.info("Testing logger!");
 		List<User> results = null;
 
 		Session session = sessionFactory.getCurrentSession();
@@ -43,7 +41,6 @@ public class SignUpService implements ISignUpService{
 	@Transactional
 	public boolean signup(String firstName, String lastName, String countryCode, String phoneNumber, String pic) {
 		if (lookup(countryCode, phoneNumber)) {
-			//TODO: log user already exist
 			logger.error("Cannot signup: User already exist with phone :" + countryCode + phoneNumber);
 			return false;
 		}
@@ -58,7 +55,6 @@ public class SignUpService implements ISignUpService{
 	@Transactional(readOnly=true)
 	public boolean login(String countryCode, String phoneNumber, String password) {
 		if (!lookup(countryCode, phoneNumber)) {
-			//TODO: log user already exist
 			logger.error("Cannot login: User does not exist with phone :" + countryCode + phoneNumber);
 			return false;
 		}
