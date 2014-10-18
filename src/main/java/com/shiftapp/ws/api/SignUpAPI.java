@@ -1,7 +1,6 @@
 package com.shiftapp.ws.api;
 
-import java.util.List;
-
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,47 +8,34 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.shiftapp.ws.model.User;
+import com.shiftapp.ws.service.ISignUpService;
 
 @Path("/signup")
 public class SignUpAPI {
 
 	@Autowired
-	private SessionFactory sessionFactory;
-	
+	private ISignUpService signUpService;
+
+	@Path("/lookup")
 	@GET
+	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response login(@QueryParam("phoneNumber") String phoneNumber) {
-
-		List results = null;
-		
-		Session session = sessionFactory.openSession();
-	      Transaction tx = null;
-	      try{
-	         tx = session.beginTransaction();
-	         Criteria cr = session.createCriteria(User.class);
-	         cr.add(Restrictions.eq("phoneNumber", phoneNumber));
-	         results = cr.list();
-	         tx.commit();
-	      }catch (HibernateException e) {
-	         if (tx!=null) tx.rollback();
-	         e.printStackTrace(); 
-	      }finally {
-	         session.close(); 
-	      }
-	      
-	      String output = "shift ws say : ";
-
-		return Response.status(200).entity(results).build();
-
+	public Response lookup(@QueryParam("countryCode") String countryCode, @QueryParam("phoneNumber") String phoneNumber) {
+		boolean result = signUpService.lookup(countryCode, phoneNumber);
+		return Response.status(200).entity(result).build();
+	}
+	
+	@Path("/login")
+	@GET
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response login(@QueryParam("countryCode") String countryCode, @QueryParam("phoneNumber") String phoneNumber, @QueryParam("password") String password) {
+		if(!signUpService.login(countryCode, phoneNumber, password)) {
+			return Response.status(403).entity("Login failed").build();
+		}
+		return Response.status(200).entity("loged in successfuly").build();
 	}
 
 }
