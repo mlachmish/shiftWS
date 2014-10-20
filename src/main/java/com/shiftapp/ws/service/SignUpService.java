@@ -10,8 +10,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.shiftapp.ws.model.NumberAuthentication;
-import com.shiftapp.ws.model.User;
+import com.shiftapp.ws.model.classes.PhoneNumberAuthentication;
+import com.shiftapp.ws.model.classes.User;
 
 public class SignUpService implements ISignUpService{
 
@@ -45,9 +45,9 @@ public class SignUpService implements ISignUpService{
 			return false;
 		}
 
-		User newUser = new User(firstName, lastName, countryCode, phoneNumber, pic);
-		Session session = sessionFactory.getCurrentSession();
-		session.persist(newUser);
+//		User newUser = new User(firstName, lastName, countryCode, phoneNumber, pic);
+//		Session session = sessionFactory.getCurrentSession();
+//		session.persist(newUser);
 		return true;
 	}
 
@@ -60,17 +60,17 @@ public class SignUpService implements ISignUpService{
 		}
 		
 		Session session = sessionFactory.getCurrentSession();
-		Criteria cr = session.createCriteria(NumberAuthentication.class);
+		Criteria cr = session.createCriteria(PhoneNumberAuthentication.class);
 		cr.add(Restrictions.eq("countryCode", countryCode));
 		cr.add(Restrictions.eq("phoneNumber", phoneNumber));
-		List<NumberAuthentication> userPass = cr.list();
+		List<PhoneNumberAuthentication> userPass = cr.list();
 		
 		if (userPass.size() != 1) {
 			logger.error("Cannot login: User dont have a genatrated password for Phone number: "+ countryCode + phoneNumber);
 			return false;
 		}
 		
-		NumberAuthentication numberAuthentication = userPass.iterator().next();
+		PhoneNumberAuthentication numberAuthentication = userPass.iterator().next();
 			return numberAuthentication.getAuthenticationCode().equals(password);
 	}
 

@@ -1,4 +1,4 @@
-package com.shiftapp.ws.model;
+package com.shiftapp.ws.model.enums;
 
 public enum RequestStatusEnum {
 	Pending,
