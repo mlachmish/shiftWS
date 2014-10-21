@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -19,6 +21,7 @@ import org.hibernate.annotations.CascadeType;
  * @author Matan Lachmish
  */
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "business_name", "address" })})
 public class Business {
 	
 	@Id

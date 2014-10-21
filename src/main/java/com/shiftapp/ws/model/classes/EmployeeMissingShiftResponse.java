@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.shiftapp.ws.model.enums.RequestStatusEnum;
 
@@ -19,6 +21,7 @@ import com.shiftapp.ws.model.enums.RequestStatusEnum;
  * @author Matan Lachmish
  */
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "business_shift_id", "business_employee_id" })})
 public class EmployeeMissingShiftResponse {
 
 	@Id

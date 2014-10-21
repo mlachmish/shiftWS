@@ -1,7 +1,6 @@
 package com.shiftapp.ws.service;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;

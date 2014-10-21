@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -23,6 +25,7 @@ import com.shiftapp.ws.model.enums.CountryCodeEnum;
  * @author Matan Lachmish
  */
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "country_code", "phone_number" })})
 public class User {
 	
 	@Id
