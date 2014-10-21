@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+/**
+ * Represent employee category in a {@link Business} (i.e. Waiter, Chef, etc...)
+ * @author Matan Lachmish
+ */
 @Entity
 public class BusinessCategory {
 
@@ -70,6 +74,36 @@ public class BusinessCategory {
 
 	public void setBusinessEmployee(Set<BusinessEmployee> businessEmployee) {
 		this.businessEmployee = businessEmployee;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (businessCategoryId ^ (businessCategoryId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BusinessCategory other = (BusinessCategory) obj;
+		if (businessCategoryId != other.businessCategoryId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessCategory [businessCategoryId=" + businessCategoryId
+				+ ", business=" + business + ", categoryName=" + categoryName
+				+ ", businessEmployee=" + businessEmployee + "]";
 	}
 
 }

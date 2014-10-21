@@ -14,6 +14,10 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+/**
+ * Represent a business object. Every business have exactly one {@link Business} object in the model.
+ * @author Matan Lachmish
+ */
 @Entity
 public class Business {
 	
@@ -181,6 +185,40 @@ public class Business {
 
 	public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
 		this.weeklySchedule = weeklySchedule;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (businessId ^ (businessId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Business other = (Business) obj;
+		if (businessId != other.businessId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Business [businessId=" + businessId + ", businessName="
+				+ businessName + ", address=" + address + ", logo=" + logo
+				+ ", businessCategories=" + businessCategories
+				+ ", businessShifts=" + businessShifts + ", businessEmployees="
+				+ businessEmployees + ", shiftRequests=" + shiftRequests
+				+ ", extraAbseceRequests=" + extraAbseceRequests
+				+ ", missingShifts=" + missingShifts + ", joinRequests="
+				+ joinRequests + ", weeklySchedule=" + weeklySchedule + "]";
 	}
 
 }

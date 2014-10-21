@@ -15,6 +15,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.shiftapp.ws.model.enums.RequestStatusEnum;
 
+/**
+ * When a {@link User} request to join a {@link Business} a {@link JoinRequest} will be created.
+ * @author Matan Lachmish
+ */
 @Entity
 public class JoinRequest {
 	
@@ -74,6 +78,36 @@ public class JoinRequest {
 
 	public void setRequestStatus(RequestStatusEnum requestStatus) {
 		this.requestStatus = requestStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (joinRequestId ^ (joinRequestId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JoinRequest other = (JoinRequest) obj;
+		if (joinRequestId != other.joinRequestId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "JoinRequest [joinRequestId=" + joinRequestId + ", user=" + user
+				+ ", business=" + business + ", requestStatus=" + requestStatus
+				+ "]";
 	}
 
 }

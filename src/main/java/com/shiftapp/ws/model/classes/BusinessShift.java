@@ -25,6 +25,10 @@ import org.hibernate.annotations.CascadeType;
 
 import com.shiftapp.ws.model.enums.WeekDayEnum;
 
+/**
+ * Represent a shift pattern definition in a {@link Business}.
+ * @author Matan Lachmish
+ */
 @Entity
 public class BusinessShift {
 
@@ -133,6 +137,39 @@ public class BusinessShift {
 
 	public void setCrews(List<ScheduleCrew> crews) {
 		this.crews = crews;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (businessShiftId ^ (businessShiftId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BusinessShift other = (BusinessShift) obj;
+		if (businessShiftId != other.businessShiftId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessShift [businessShiftId=" + businessShiftId
+				+ ", business=" + business + ", weekDays=" + weekDays
+				+ ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", shiftRequests=" + shiftRequests + ", crews=" + crews
+				+ ", employeeMissingShiftRespones="
+				+ employeeMissingShiftRespones + "]";
 	}
 
 }

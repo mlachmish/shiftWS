@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
+/**
+ * Every week all {@link User}s create a {@link ShiftRequest} describing the {@link BusinessShift} they don't want to work in.
+ * @author Matan Lachmish
+ */
 @Entity
 public class ShiftRequest {
 
@@ -73,6 +77,36 @@ public class ShiftRequest {
 
 	public void setBusinessShifts(List<BusinessShift> businessShifts) {
 		this.businessShifts = businessShifts;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (shiftRequestId ^ (shiftRequestId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ShiftRequest other = (ShiftRequest) obj;
+		if (shiftRequestId != other.shiftRequestId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ShiftRequest [shiftRequestId=" + shiftRequestId + ", business="
+				+ business + ", businessEmployee=" + businessEmployee
+				+ ", businessShifts=" + businessShifts + "]";
 	}
 
 }

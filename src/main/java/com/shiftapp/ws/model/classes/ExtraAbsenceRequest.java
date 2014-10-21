@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 
 import com.shiftapp.ws.model.enums.RequestStatusEnum;
 
+/**
+ * When a {@link BusinessEmployee} need to ask for extra absence request an {@link ExtraAbsenceRequest} object will be created.
+ * @author Matan Lachmish
+ */
 @Entity
 public class ExtraAbsenceRequest {
 
@@ -97,6 +101,39 @@ public class ExtraAbsenceRequest {
 
 	public void setRequestStatus(RequestStatusEnum requestStatus) {
 		this.requestStatus = requestStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ (int) (extraAbsenceRequestId ^ (extraAbsenceRequestId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExtraAbsenceRequest other = (ExtraAbsenceRequest) obj;
+		if (extraAbsenceRequestId != other.extraAbsenceRequestId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ExtraAbsenceRequest [extraAbsenceRequestId="
+				+ extraAbsenceRequestId + ", business=" + business
+				+ ", businessEmployee=" + businessEmployee + ", extraAmount="
+				+ extraAmount + ", reason=" + reason + ", requestStatus="
+				+ requestStatus + "]";
 	}
 
 }

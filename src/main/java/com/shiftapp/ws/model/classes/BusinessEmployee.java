@@ -19,6 +19,11 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+/**
+ * Represent employee in a {@link Business}.
+ * A {@link User} will have a BusinessEmployee object for each business that he works in.
+ * @author Matan Lachmish
+ */
 @Entity
 public class BusinessEmployee {
 
@@ -190,6 +195,42 @@ public class BusinessEmployee {
 
 	public void setScheduleCrews(Set<ScheduleCrew> scheduleCrews) {
 		this.scheduleCrews = scheduleCrews;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (businessEmployeeId ^ (businessEmployeeId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BusinessEmployee other = (BusinessEmployee) obj;
+		if (businessEmployeeId != other.businessEmployeeId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessEmployee [businessEmployeeId=" + businessEmployeeId
+				+ ", user=" + user + ", business=" + business + ", isManager="
+				+ isManager + ", promotingUser=" + promotingUser
+				+ ", isSuspended=" + isSuspended + ", defaultAbsences="
+				+ defaultAbsences + ", extraAbsences=" + extraAbsences
+				+ ", businessCategories=" + businessCategories
+				+ ", shiftRequest=" + shiftRequest + ", extraAbsenceRequests="
+				+ extraAbsenceRequests + ", scheduleCrews=" + scheduleCrews
+				+ "]";
 	}
 
 }

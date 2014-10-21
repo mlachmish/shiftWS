@@ -13,6 +13,11 @@ import javax.persistence.ManyToOne;
 
 import com.shiftapp.ws.model.enums.RequestStatusEnum;
 
+/**
+ * In case of a {@link BusinessShift} with missing employees,
+ * {@link EmployeeMissingShiftResponse} object will be created for all {@link BusinessEmployee} that don't work in that {@link BusinessShift}.
+ * @author Matan Lachmish
+ */
 @Entity
 public class EmployeeMissingShiftResponse {
 
@@ -98,6 +103,39 @@ public class EmployeeMissingShiftResponse {
 
 	public void setRequestStatus(RequestStatusEnum requestStatus) {
 		this.requestStatus = requestStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ (int) (employeeMissingShiftResponeId ^ (employeeMissingShiftResponeId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EmployeeMissingShiftResponse other = (EmployeeMissingShiftResponse) obj;
+		if (employeeMissingShiftResponeId != other.employeeMissingShiftResponeId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "EmployeeMissingShiftResponse [employeeMissingShiftResponeId="
+				+ employeeMissingShiftResponeId + ", businessShift="
+				+ businessShift + ", business=" + business
+				+ ", businessEmployee=" + businessEmployee + ", reason="
+				+ reason + ", requestStatus=" + requestStatus + "]";
 	}
 
 }

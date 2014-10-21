@@ -14,6 +14,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+/**
+ * When a {@link User} try to sign up or login a {@link PhoneNumberAuthentication} will be created with a generated one time pass. 
+ * @author Matan Lachmish
+ */
 @Entity
 public class PhoneNumberAuthentication {
 	
@@ -76,6 +80,38 @@ public class PhoneNumberAuthentication {
 
 	public void setAuthenticated(boolean isAuthenticated) {
 		this.isAuthenticated = isAuthenticated;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ (int) (numberAuthenticationId ^ (numberAuthenticationId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PhoneNumberAuthentication other = (PhoneNumberAuthentication) obj;
+		if (numberAuthenticationId != other.numberAuthenticationId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PhoneNumberAuthentication [numberAuthenticationId="
+				+ numberAuthenticationId + ", user=" + user
+				+ ", authenticationCode=" + authenticationCode
+				+ ", isAuthenticated=" + isAuthenticated + "]";
 	}
 
 }

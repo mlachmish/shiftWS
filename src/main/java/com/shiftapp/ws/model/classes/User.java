@@ -18,6 +18,10 @@ import org.hibernate.annotations.CascadeType;
 
 import com.shiftapp.ws.model.enums.CountryCodeEnum;
 
+/**
+ * Represent a user object. Every user have exactly one {@link User} object in the model.
+ * @author Matan Lachmish
+ */
 @Entity
 public class User {
 	
@@ -176,6 +180,40 @@ public class User {
 
 	public void setJoinRequest(JoinRequest joinRequest) {
 		this.joinRequest = joinRequest;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (userId ^ (userId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (userId != other.userId)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", countryCode=" + countryCode
+				+ ", phoneNumber=" + phoneNumber + ", pic=" + pic
+				+ ", businessEmployees=" + businessEmployees
+				+ ", promotedBusinessEmployees=" + promotedBusinessEmployees
+				+ ", fbAccessToken=" + fbAccessToken
+				+ ", phoneNumberAuthentication=" + phoneNumberAuthentication
+				+ ", joinRequest=" + joinRequest + "]";
 	}
 
 }
