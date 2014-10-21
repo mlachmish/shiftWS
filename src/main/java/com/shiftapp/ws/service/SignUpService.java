@@ -1,6 +1,7 @@
 package com.shiftapp.ws.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -10,8 +11,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shiftapp.ws.messaging.IMessagingService;
 import com.shiftapp.ws.model.classes.PhoneNumberAuthentication;
 import com.shiftapp.ws.model.classes.User;
+import com.shiftapp.ws.model.enums.CountryCodeEnum;
 
 public class SignUpService implements ISignUpService{
 
@@ -19,7 +22,10 @@ public class SignUpService implements ISignUpService{
 
 	@Autowired
 	private SessionFactory sessionFactory;
-
+	
+	@Autowired
+	private IMessagingService messagingService;
+	
 	@Override
 	@Transactional(readOnly=true)
 	public boolean lookup(String countryCode, String phoneNumber) {
@@ -27,7 +33,7 @@ public class SignUpService implements ISignUpService{
 
 		Session session = sessionFactory.getCurrentSession();
 		Criteria cr = session.createCriteria(User.class);
-		cr.add(Restrictions.eq("countryCode", countryCode));
+		cr.add(Restrictions.eq("countryCode", CountryCodeEnum.getInstance(countryCode)));
 		cr.add(Restrictions.eq("phoneNumber", phoneNumber));
 		results = cr.list();
 
@@ -45,9 +51,15 @@ public class SignUpService implements ISignUpService{
 			return false;
 		}
 
-//		User newUser = new User(firstName, lastName, countryCode, phoneNumber, pic);
-//		Session session = sessionFactory.getCurrentSession();
-//		session.persist(newUser);
+		User newUser = new User(firstName, lastName, CountryCodeEnum.getInstance(countryCode), phoneNumber, pic);
+		PhoneNumberAuthentication phoneNumberAuthentication = new PhoneNumberAuthentication(newUser, false);
+		newUser.setPhoneNumberAuthentication(phoneNumberAuthentication);
+		phoneNumberAuthentication.setUser(newUser);
+		
+		authenticateUserPhoneNumber(newUser);
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.persist(newUser);
 		return true;
 	}
 
@@ -72,6 +84,12 @@ public class SignUpService implements ISignUpService{
 		
 		PhoneNumberAuthentication numberAuthentication = userPass.iterator().next();
 			return numberAuthentication.getAuthenticationCode().equals(password);
+	}
+	
+	@Transactional
+	private boolean authenticateUserPhoneNumber(User user) {
+		messagingService.sendVerificationMessgae(user);
+		return true;
 	}
 
 }

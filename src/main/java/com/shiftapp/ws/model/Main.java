@@ -24,11 +24,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mysql.fabric.xmlrpc.base.Array;
 import com.shiftapp.ws.model.classes.WeeklySchedule;
+import com.shiftapp.ws.model.enums.CountryCodeEnum;
 
 public class Main {
    private static SessionFactory sessionFactory; 
    
    public static void main(String[] args) {
+	   
       try{
          Configuration configuration = new Configuration().
                    configure();

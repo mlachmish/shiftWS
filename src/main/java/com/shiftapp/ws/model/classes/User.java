@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +15,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
+import com.shiftapp.ws.model.enums.CountryCodeEnum;
 
 @Entity
 public class User {
@@ -28,8 +32,9 @@ public class User {
 	@Column (name="last_name")
 	private String lastName;
 	
+	@Enumerated (EnumType.STRING)
 	@Column (name="country_code")
-	private String countryCode;
+	private CountryCodeEnum countryCode;
 	
 	@Column (name="phone_number")
 	private String phoneNumber;
@@ -58,7 +63,7 @@ public class User {
 	
 	public User() {}
 
-	public User(String firstName, String lastName, String countryCode,
+	public User(String firstName, String lastName, CountryCodeEnum countryCode,
 			String phoneNumber, String pic,
 			List<BusinessEmployee> businessEmployees,
 			List<BusinessEmployee> promotedBusinessEmployees,
@@ -76,6 +81,11 @@ public class User {
 		this.fbAccessToken = fbAccessToken;
 		this.phoneNumberAuthentication = phoneNumberAuthentication;
 		this.joinRequest = joinRequest;
+	}
+
+	public User(String firstName, String lastName, CountryCodeEnum countryCode,
+			String phoneNumber, String pic) {
+		this(firstName, lastName, countryCode, phoneNumber, pic, null, null, null, null, null);
 	}
 
 	public long getUserId() {
@@ -102,11 +112,11 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getCountryCode() {
+	public CountryCodeEnum getCountryCode() {
 		return countryCode;
 	}
 
-	public void setCountryCode(String countryCode) {
+	public void setCountryCode(CountryCodeEnum countryCode) {
 		this.countryCode = countryCode;
 	}
 

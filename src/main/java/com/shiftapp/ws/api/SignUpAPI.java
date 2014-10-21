@@ -5,8 +5,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,11 +20,11 @@ public class SignUpAPI {
 	@Autowired
 	private ISignUpService signUpService;
 
-	@Path("/lookup")
+	@Path("/lookup/{countryCode}/{phoneNumber}")
 	@GET
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response lookup(@QueryParam("countryCode") String countryCode, @QueryParam("phoneNumber") String phoneNumber) {
+	public Response lookup(@PathParam("countryCode") String countryCode, @PathParam("phoneNumber") String phoneNumber) {
 		boolean result = signUpService.lookup(countryCode, phoneNumber);
 		return Response.status(200).entity(result).build();
 	}
