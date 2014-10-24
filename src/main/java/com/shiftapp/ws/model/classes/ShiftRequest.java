@@ -1,5 +1,6 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -72,6 +73,9 @@ public class ShiftRequest {
 	}
 
 	public List<BusinessShift> getBusinessShifts() {
+		if (businessShifts == null) {
+			businessShifts = new ArrayList<BusinessShift>();
+		}
 		return businessShifts;
 	}
 
@@ -79,6 +83,16 @@ public class ShiftRequest {
 		this.businessShifts = businessShifts;
 	}
 
+	public void addBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().add(businessShift);
+		businessShift.addShiftRequest(this);
+	}
+	
+	public void removeBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().remove(businessShift);
+		businessShift.removeShiftRequest(this);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

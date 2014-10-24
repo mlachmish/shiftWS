@@ -1,7 +1,7 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +47,7 @@ public class BusinessEmployee {
 	private boolean isManager;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private User promotingUser;
+	private BusinessEmployee promotingEmployee;
 	
 	@Column (name="is_suspended")
 	private boolean isSuspended;
@@ -64,7 +64,7 @@ public class BusinessEmployee {
 			@JoinColumn(name = "business_employee_id", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "business_category_id", 
 					nullable = false, updatable = false) })
-	private Set<BusinessCategory> businessCategories;
+	private List<BusinessCategory> businessCategories;
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "businessEmployee")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
@@ -74,33 +74,47 @@ public class BusinessEmployee {
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<ExtraAbsenceRequest> extraAbsenceRequests;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "businessEmployee")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private List<EmployeeMissingShiftResponse> missingShifts;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "employee_crew", joinColumns = { 
 			@JoinColumn(name = "business_employee_id", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "schedule_crew_id", 
 					nullable = false, updatable = false) })
-	private Set<ScheduleCrew> scheduleCrews;
+	private List<ScheduleCrew> scheduleCrews;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "promotingEmployee")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private List<BusinessEmployee> promotedBusinessEmployees;
 	
 	public BusinessEmployee() {}
 
+
 	public BusinessEmployee(User user, Business business, boolean isManager,
-			User promotingUser, boolean isSuspended, int defaultAbsences,
-			int extraAbsences, Set<BusinessCategory> businessCategories,
+			BusinessEmployee promotingEmployee, boolean isSuspended,
+			int defaultAbsences, int extraAbsences,
+			List<BusinessCategory> businessCategories,
 			ShiftRequest shiftRequest,
 			List<ExtraAbsenceRequest> extraAbsenceRequests,
-			Set<ScheduleCrew> scheduleCrews) {
+			List<EmployeeMissingShiftResponse> missingShifts,
+			List<ScheduleCrew> scheduleCrews,
+			List<BusinessEmployee> promotedBusinessEmployees) {
 		super();
 		this.user = user;
 		this.business = business;
 		this.isManager = isManager;
-		this.promotingUser = promotingUser;
+		this.promotingEmployee = promotingEmployee;
 		this.isSuspended = isSuspended;
 		this.defaultAbsences = defaultAbsences;
 		this.extraAbsences = extraAbsences;
 		this.businessCategories = businessCategories;
 		this.shiftRequest = shiftRequest;
 		this.extraAbsenceRequests = extraAbsenceRequests;
+		this.missingShifts = missingShifts;
 		this.scheduleCrews = scheduleCrews;
+		this.promotedBusinessEmployees = promotedBusinessEmployees;
 	}
 
 	public long getBusinessEmployeeId() {
@@ -135,12 +149,12 @@ public class BusinessEmployee {
 		this.isManager = isManager;
 	}
 
-	public User getPromotingUser() {
-		return promotingUser;
+	public BusinessEmployee getPromotingEmployee() {
+		return promotingEmployee;
 	}
 
-	public void setPromotingUser(User promotingUser) {
-		this.promotingUser = promotingUser;
+	public void setPromotingEmployee(BusinessEmployee promotingEmployee) {
+		this.promotingEmployee = promotingEmployee;
 	}
 
 	public boolean isSuspended() {
@@ -167,12 +181,25 @@ public class BusinessEmployee {
 		this.extraAbsences = extraAbsences;
 	}
 
-	public Set<BusinessCategory> getBusinessCategories() {
+	public List<BusinessCategory> getBusinessCategories() {
+		if (businessCategories == null) {
+			businessCategories = new ArrayList<BusinessCategory>();
+		}
 		return businessCategories;
 	}
 
-	public void setBusinessCategories(Set<BusinessCategory> businessCategories) {
+	public void setBusinessCategories(List<BusinessCategory> businessCategories) {
 		this.businessCategories = businessCategories;
+	}
+	
+	public void addBusinessCategory (BusinessCategory businessCategory) {
+		this.getBusinessCategories().add(businessCategory);
+		businessCategory.addBusinessEmployee(this);
+	}
+	
+	public void removeBusinessCategory (BusinessCategory businessCategory) {
+		this.getBusinessCategories().remove(businessCategory);
+		businessCategory.removeBusinessEmployee(this);
 	}
 
 	public ShiftRequest getShiftRequest() {
@@ -184,6 +211,9 @@ public class BusinessEmployee {
 	}
 
 	public List<ExtraAbsenceRequest> getExtraAbsenceRequests() {
+		if (extraAbsenceRequests == null) {
+			extraAbsenceRequests = new ArrayList<ExtraAbsenceRequest>();
+		}
 		return extraAbsenceRequests;
 	}
 
@@ -191,13 +221,79 @@ public class BusinessEmployee {
 			List<ExtraAbsenceRequest> extraAbsenceRequests) {
 		this.extraAbsenceRequests = extraAbsenceRequests;
 	}
+	
+	public void addExtraAbsenceRequest (ExtraAbsenceRequest extraAbsenceRequest) {
+		this.getExtraAbsenceRequests().add(extraAbsenceRequest);
+		extraAbsenceRequest.setBusinessEmployee(this);
+	}
+	
+	public void removeExtraAbsenceRequest (ExtraAbsenceRequest extraAbsenceRequest) {
+		this.getExtraAbsenceRequests().remove(extraAbsenceRequest);
+		extraAbsenceRequest.setBusinessEmployee(null);
+	}
 
-	public Set<ScheduleCrew> getScheduleCrews() {
+	public List<EmployeeMissingShiftResponse> getMissingShifts() {
+		if (missingShifts == null) {
+			missingShifts = new ArrayList<EmployeeMissingShiftResponse>();
+		}
+		return missingShifts;
+	}
+
+	public void setMissingShifts(List<EmployeeMissingShiftResponse> missingShifts) {
+		this.missingShifts = missingShifts;
+	}
+	
+	public void addMissingShift (EmployeeMissingShiftResponse missingShift) {
+		this.getMissingShifts().add(missingShift);
+		missingShift.setBusinessEmployee(this);
+	}
+	
+	public void removeMissingShift (EmployeeMissingShiftResponse missingShift) {
+		this.getMissingShifts().remove(missingShift);
+		missingShift.setBusinessEmployee(null);
+	}
+
+	public List<ScheduleCrew> getScheduleCrews() {
+		if (scheduleCrews == null) {
+			scheduleCrews = new ArrayList<ScheduleCrew>();
+		}
 		return scheduleCrews;
 	}
 
-	public void setScheduleCrews(Set<ScheduleCrew> scheduleCrews) {
+	public void setScheduleCrews(List<ScheduleCrew> scheduleCrews) {
 		this.scheduleCrews = scheduleCrews;
+	}
+	
+	public void addScheduleCrew (ScheduleCrew scheduleCrew) {
+		this.getScheduleCrews().add(scheduleCrew);
+		scheduleCrew.addBusinessEmployee(this);
+	}
+	
+	public void removeScheduleCrew (ScheduleCrew scheduleCrew) {
+		this.getScheduleCrews().remove(scheduleCrew);
+		scheduleCrew.removeBusinessEmployee(this);
+	}
+
+	public List<BusinessEmployee> getPromotedBusinessEmployees() {
+		if (promotedBusinessEmployees == null) {
+			promotedBusinessEmployees = new ArrayList<BusinessEmployee>();
+		}
+		return promotedBusinessEmployees;
+	}
+
+	public void setPromotedBusinessEmployees(
+			List<BusinessEmployee> promotedBusinessEmployees) {
+		this.promotedBusinessEmployees = promotedBusinessEmployees;
+	}
+
+	public void addPromotedBusinessEmployee (BusinessEmployee promotedBusinessEmployee) {
+		this.getPromotedBusinessEmployees().add(promotedBusinessEmployee);
+		promotedBusinessEmployee.setPromotingEmployee(this);
+	}
+	
+	public void removePromotedBusinessEmployee (BusinessEmployee promotedBusinessEmployee) {
+		this.getPromotedBusinessEmployees().remove(promotedBusinessEmployee);
+		promotedBusinessEmployee.setPromotingEmployee(null);
 	}
 
 	@Override
@@ -227,13 +323,16 @@ public class BusinessEmployee {
 	public String toString() {
 		return "BusinessEmployee [businessEmployeeId=" + businessEmployeeId
 				+ ", user=" + user + ", business=" + business + ", isManager="
-				+ isManager + ", promotingUser=" + promotingUser
+				+ isManager + ", promotingEmployee=" + promotingEmployee
 				+ ", isSuspended=" + isSuspended + ", defaultAbsences="
 				+ defaultAbsences + ", extraAbsences=" + extraAbsences
 				+ ", businessCategories=" + businessCategories
 				+ ", shiftRequest=" + shiftRequest + ", extraAbsenceRequests="
-				+ extraAbsenceRequests + ", scheduleCrews=" + scheduleCrews
+				+ extraAbsenceRequests + ", missingShifts=" + missingShifts
+				+ ", scheduleCrews=" + scheduleCrews
+				+ ", promotedBusinessEmployees=" + promotedBusinessEmployees
 				+ "]";
 	}
+
 
 }

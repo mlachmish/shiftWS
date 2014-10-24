@@ -1,5 +1,6 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -25,7 +26,8 @@ import com.shiftapp.ws.model.enums.CountryCodeEnum;
  * @author Matan Lachmish
  */
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "country_code", "phone_number" })})
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "country_code", "phone_number" }),
+							 @UniqueConstraint( columnNames = { "access_token" })})
 public class User {
 	
 	@Id
@@ -53,12 +55,11 @@ public class User {
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<BusinessEmployee> businessEmployees;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "promotingUser")
-	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	private List<BusinessEmployee> promotedBusinessEmployees;
-	
 	@Column (name="fb_access_token")
 	private String fbAccessToken;
+	
+	@Column (name="access_token")
+	private String accessToken;
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
@@ -73,8 +74,8 @@ public class User {
 	public User(String firstName, String lastName, CountryCodeEnum countryCode,
 			String phoneNumber, String pic,
 			List<BusinessEmployee> businessEmployees,
-			List<BusinessEmployee> promotedBusinessEmployees,
 			String fbAccessToken,
+			String accessToken,
 			PhoneNumberAuthentication phoneNumberAuthentication,
 			JoinRequest joinRequest) {
 		super();
@@ -84,8 +85,8 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.pic = pic;
 		this.businessEmployees = businessEmployees;
-		this.promotedBusinessEmployees = promotedBusinessEmployees;
 		this.fbAccessToken = fbAccessToken;
+		this.accessToken =accessToken;
 		this.phoneNumberAuthentication = phoneNumberAuthentication;
 		this.joinRequest = joinRequest;
 	}
@@ -144,6 +145,9 @@ public class User {
 	}
 
 	public List<BusinessEmployee> getBusinessEmployees() {
+		if (businessEmployees == null) {
+			businessEmployees = new ArrayList<BusinessEmployee>();
+		}
 		return businessEmployees;
 	}
 
@@ -151,15 +155,16 @@ public class User {
 		this.businessEmployees = businessEmployees;
 	}
 
-	public List<BusinessEmployee> getPromotedBusinessEmployees() {
-		return promotedBusinessEmployees;
+	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().add(businessEmployee);
+		businessEmployee.setUser(this);
 	}
-
-	public void setPromotedBusinessEmployees(
-			List<BusinessEmployee> promotedBusinessEmployees) {
-		this.promotedBusinessEmployees = promotedBusinessEmployees;
+	
+	public void removeBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().remove(businessEmployee);
+		businessEmployee.setUser(null);
 	}
-
+	
 	public String getFbAccessToken() {
 		return fbAccessToken;
 	}
@@ -183,6 +188,14 @@ public class User {
 
 	public void setJoinRequest(JoinRequest joinRequest) {
 		this.joinRequest = joinRequest;
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 	@Override
@@ -213,10 +226,10 @@ public class User {
 				+ ", lastName=" + lastName + ", countryCode=" + countryCode
 				+ ", phoneNumber=" + phoneNumber + ", pic=" + pic
 				+ ", businessEmployees=" + businessEmployees
-				+ ", promotedBusinessEmployees=" + promotedBusinessEmployees
-				+ ", fbAccessToken=" + fbAccessToken
-				+ ", phoneNumberAuthentication=" + phoneNumberAuthentication
-				+ ", joinRequest=" + joinRequest + "]";
+				+ ", fbAccessToken=" + fbAccessToken + ", accessToken="
+				+ accessToken + ", phoneNumberAuthentication="
+				+ phoneNumberAuthentication + ", joinRequest=" + joinRequest
+				+ "]";
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class WeeklySchedule {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "weeklySchedule")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	private List<ScheduleCrew> schedule;
+	private List<ScheduleCrew> crews;
 	
 	@Enumerated (EnumType.STRING)
 	private RequestStatusEnum requestStatus;
@@ -49,11 +50,11 @@ public class WeeklySchedule {
 	public WeeklySchedule() {}
 
 	public WeeklySchedule(Business business, Date date,
-			List<ScheduleCrew> schedule, RequestStatusEnum requestStatus) {
+			List<ScheduleCrew> crews, RequestStatusEnum requestStatus) {
 		super();
 		this.business = business;
 		this.date = date;
-		this.schedule = schedule;
+		this.crews = crews;
 		this.requestStatus = requestStatus;
 	}
 
@@ -81,12 +82,25 @@ public class WeeklySchedule {
 		this.date = date;
 	}
 
-	public List<ScheduleCrew> getSchedule() {
-		return schedule;
+	public List<ScheduleCrew> getCrews() {
+		if (crews == null) {
+			crews = new ArrayList<ScheduleCrew>();
+		}
+		return crews;
 	}
 
-	public void setSchedule(List<ScheduleCrew> schedule) {
-		this.schedule = schedule;
+	public void setCrews(List<ScheduleCrew> crews) {
+		this.crews = crews;
+	}
+	
+	public void addCrew (ScheduleCrew Crew) {
+		this.getCrews().add(Crew);
+		Crew.setWeeklySchedule(this);
+	}
+	
+	public void removeCrew (ScheduleCrew Crew) {
+		this.getCrews().remove(Crew);
+		Crew.setWeeklySchedule(null);
 	}
 
 	public RequestStatusEnum getRequestStatus() {
@@ -124,7 +138,7 @@ public class WeeklySchedule {
 	public String toString() {
 		return "WeeklySchedule [weeklyScheduleId=" + weeklyScheduleId
 				+ ", business=" + business + ", date=" + date + ", schedule="
-				+ schedule + ", requestStatus=" + requestStatus + "]";
+				+ crews + ", requestStatus=" + requestStatus + "]";
 	}
 
 }

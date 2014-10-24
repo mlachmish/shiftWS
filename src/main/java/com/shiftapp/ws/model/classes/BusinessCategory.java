@@ -1,6 +1,7 @@
 package com.shiftapp.ws.model.classes;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 /**
  * Represent employee category in a {@link Business} (i.e. Waiter, Chef, etc...)
@@ -35,16 +40,22 @@ public class BusinessCategory {
 	private String categoryName;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "businessCategories")
-	private Set<BusinessEmployee> businessEmployee;
+	private List<BusinessEmployee> businessEmployees;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "businessCategory")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private List<ScheduleCrew> scheduleCrews;
 	
 	public BusinessCategory() {}
 
 	public BusinessCategory(Business business, String categoryName,
-			Set<BusinessEmployee> businessEmployee) {
+			List<BusinessEmployee> businessEmployees,
+			List<ScheduleCrew> scheduleCrews) {
 		super();
 		this.business = business;
 		this.categoryName = categoryName;
-		this.businessEmployee = businessEmployee;
+		this.businessEmployees = businessEmployees;
+		this.scheduleCrews = scheduleCrews;
 	}
 
 	public long getBusinessCategoryId() {
@@ -71,12 +82,46 @@ public class BusinessCategory {
 		this.categoryName = categoryName;
 	}
 
-	public Set<BusinessEmployee> getBusinessEmployee() {
-		return businessEmployee;
+	public List<BusinessEmployee> getBusinessEmployees() {
+		if (businessEmployees == null) {
+			businessEmployees = new ArrayList<BusinessEmployee>();
+		}
+		return businessEmployees;
 	}
 
-	public void setBusinessEmployee(Set<BusinessEmployee> businessEmployee) {
-		this.businessEmployee = businessEmployee;
+	public void setBusinessEmployees(List<BusinessEmployee> businessEmployees) {
+		this.businessEmployees = businessEmployees;
+	}
+	
+	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().add(businessEmployee);
+		businessEmployee.addBusinessCategory(this);
+	}
+	
+	public void removeBusinessEmployee (BusinessEmployee scheduleCrew) {
+		this.getBusinessEmployees().remove(scheduleCrew);
+		scheduleCrew.removeBusinessCategory(this);
+	}
+
+	public List<ScheduleCrew> getScheduleCrews() {
+		if (scheduleCrews == null) {
+			scheduleCrews = new ArrayList<ScheduleCrew>();
+		}
+		return scheduleCrews;
+	}
+
+	public void setScheduleCrews(List<ScheduleCrew> scheduleCrews) {
+		this.scheduleCrews = scheduleCrews;
+	}
+	
+	public void addScheduleCrew (ScheduleCrew scheduleCrew) {
+		this.getScheduleCrews().add(scheduleCrew);
+		scheduleCrew.setBusinessCategory(this);
+	}
+	
+	public void removeScheduleCrew (ScheduleCrew scheduleCrew) {
+		this.getScheduleCrews().remove(scheduleCrew);
+		scheduleCrew.setBusinessCategory(null);
 	}
 
 	@Override
@@ -106,7 +151,8 @@ public class BusinessCategory {
 	public String toString() {
 		return "BusinessCategory [businessCategoryId=" + businessCategoryId
 				+ ", business=" + business + ", categoryName=" + categoryName
-				+ ", businessEmployee=" + businessEmployee + "]";
+				+ ", businessEmployees=" + businessEmployees
+				+ ", scheduleCrews=" + scheduleCrews + "]";
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -36,8 +37,12 @@ public class ScheduleCrew {
 	@JoinColumn(name = "business_shift_id")
 	private BusinessShift businessShift;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "business_category_id")
+	private BusinessCategory businessCategory;
+	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "scheduleCrews")
-	private List<BusinessEmployee> businessEmployee;
+	private List<BusinessEmployee> businessEmployees;
 	
 	@Enumerated (EnumType.STRING)
 	@Column (name="weekDay")
@@ -46,12 +51,13 @@ public class ScheduleCrew {
 	public ScheduleCrew() {}
 
 	public ScheduleCrew(WeeklySchedule weeklySchedule,
-			BusinessShift businessShift,
-			List<BusinessEmployee> businessEmployee, WeekDayEnum weekDay) {
+			BusinessShift businessShift, BusinessCategory businessCategory,
+			List<BusinessEmployee> businessEmployees, WeekDayEnum weekDay) {
 		super();
 		this.weeklySchedule = weeklySchedule;
 		this.businessShift = businessShift;
-		this.businessEmployee = businessEmployee;
+		this.businessCategory = businessCategory;
+		this.businessEmployees = businessEmployees;
 		this.weekDay = weekDay;
 	}
 
@@ -79,12 +85,33 @@ public class ScheduleCrew {
 		this.businessShift = businessShift;
 	}
 
-	public List<BusinessEmployee> getBusinessEmployee() {
-		return businessEmployee;
+	public BusinessCategory getBusinessCategory() {
+		return businessCategory;
 	}
 
-	public void setBusinessEmployee(List<BusinessEmployee> businessEmployee) {
-		this.businessEmployee = businessEmployee;
+	public void setBusinessCategory(BusinessCategory businessCategory) {
+		this.businessCategory = businessCategory;
+	}
+
+	public List<BusinessEmployee> getBusinessEmployees() {
+		if (businessEmployees == null) {
+			businessEmployees = new ArrayList<BusinessEmployee>();
+		}
+		return businessEmployees;
+	}
+
+	public void setBusinessEmployees(List<BusinessEmployee> businessEmployee) {
+		this.businessEmployees = businessEmployee;
+	}
+	
+	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().add(businessEmployee);
+		businessEmployee.addScheduleCrew(this);
+	}
+	
+	public void removeBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().remove(businessEmployee);
+		businessEmployee.removeScheduleCrew(this);
 	}
 
 	public WeekDayEnum getWeekDay() {
@@ -122,8 +149,9 @@ public class ScheduleCrew {
 	public String toString() {
 		return "ScheduleCrew [scheduleCrewId=" + scheduleCrewId
 				+ ", weeklySchedule=" + weeklySchedule + ", businessShift="
-				+ businessShift + ", businessEmployee=" + businessEmployee
-				+ ", weekDay=" + weekDay + "]";
+				+ businessShift + ", businessCategory=" + businessCategory
+				+ ", businessEmployee=" + businessEmployees + ", weekDay="
+				+ weekDay + "]";
 	}
 
 }

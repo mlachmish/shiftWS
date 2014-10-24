@@ -1,6 +1,7 @@
 package com.shiftapp.ws.model.classes;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -124,6 +125,9 @@ public class BusinessShift {
 	}
 
 	public List<ShiftRequest> getShiftRequests() {
+		if (shiftRequests == null) {
+			shiftRequests = new ArrayList<ShiftRequest>();
+		}
 		return shiftRequests;
 	}
 
@@ -131,14 +135,59 @@ public class BusinessShift {
 		this.shiftRequests = shiftRequests;
 	}
 
+	public void addShiftRequest (ShiftRequest shiftRequest) {
+		this.getShiftRequests().add(shiftRequest);
+		shiftRequest.addBusinessShift(this);
+	}
+	
+	public void removeShiftRequest (ShiftRequest shiftRequest) {
+		this.getShiftRequests().remove(shiftRequest);
+		shiftRequest.removeBusinessShift(this);
+	}
+	
 	public List<ScheduleCrew> getCrews() {
+		if (crews == null) {
+			crews = new ArrayList<ScheduleCrew>();
+		}
 		return crews;
 	}
 
 	public void setCrews(List<ScheduleCrew> crews) {
 		this.crews = crews;
 	}
+	
+	public void addScheduleCrew (ScheduleCrew crew) {
+		this.getCrews().add(crew);
+		crew.setBusinessShift(this);
+	}
+	
+	public void removeScheduleCrew (ScheduleCrew crew) {
+		this.getCrews().remove(crew);
+		crew.setBusinessShift(null);
+	}
 
+	public List<EmployeeMissingShiftResponse> getEmployeeMissingShiftRespones() {
+		if (employeeMissingShiftRespones == null) {
+			employeeMissingShiftRespones = new ArrayList<EmployeeMissingShiftResponse>();
+		}
+		return employeeMissingShiftRespones;
+	}
+
+	public void setEmployeeMissingShiftRespones(
+			List<EmployeeMissingShiftResponse> employeeMissingShiftRespones) {
+		this.employeeMissingShiftRespones = employeeMissingShiftRespones;
+	}
+
+	public void addEmployeeMissingShiftResponse (EmployeeMissingShiftResponse employeeMissingShiftRespone) {
+		this.getEmployeeMissingShiftRespones().add(employeeMissingShiftRespone);
+		employeeMissingShiftRespone.setBusinessShift(this);
+	}
+	
+	public void removeEmployeeMissingShiftResponse (EmployeeMissingShiftResponse employeeMissingShiftRespone) {
+		this.getEmployeeMissingShiftRespones().remove(employeeMissingShiftRespone);
+		employeeMissingShiftRespone.setBusinessShift(null);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,5 +1,6 @@
 package com.shiftapp.ws.model.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -127,14 +128,30 @@ public class Business {
 	}
 
 	public List<BusinessCategory> getBusinessCategories() {
+		if (businessCategories == null) {
+			businessCategories = new ArrayList<BusinessCategory>();
+		}
 		return businessCategories;
 	}
 
 	public void setBusinessCategories(List<BusinessCategory> businessCategories) {
 		this.businessCategories = businessCategories;
 	}
+	
+	public void addBusinessCategory (BusinessCategory businessCategory) {
+		this.getBusinessCategories().add(businessCategory);
+		businessCategory.setBusiness(this);
+	}
+	
+	public void removeBusinessCategory (BusinessCategory businessCategory) {
+		this.getBusinessCategories().remove(businessCategory);
+		businessCategory.setBusiness(null);
+	}
 
 	public List<BusinessShift> getBusinessShifts() {
+		if (businessShifts == null) {
+			businessShifts = new ArrayList<BusinessShift>();
+		}
 		return businessShifts;
 	}
 
@@ -142,7 +159,20 @@ public class Business {
 		this.businessShifts = businessShifts;
 	}
 
+	public void addBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().add(businessShift);
+		businessShift.setBusiness(this);
+	}
+	
+	public void removeBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().remove(businessShift);
+		businessShift.setBusiness(null);
+	}
+	
 	public List<BusinessEmployee> getBusinessEmployees() {
+		if (businessEmployees == null) {
+			businessEmployees = new ArrayList<BusinessEmployee>();
+		}
 		return businessEmployees;
 	}
 
@@ -150,7 +180,20 @@ public class Business {
 		this.businessEmployees = businessEmployees;
 	}
 
+	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().add(businessEmployee);
+		businessEmployee.setBusiness(this);
+	}
+	
+	public void removeBusinessEmployee (BusinessEmployee businessEmployee) {
+		this.getBusinessEmployees().remove(businessEmployee);
+		businessEmployee.setBusiness(null);
+	}
+
 	public List<ShiftRequest> getShiftRequests() {
+		if (shiftRequests == null) {
+			shiftRequests = new ArrayList<ShiftRequest>();
+		}
 		return shiftRequests;
 	}
 
@@ -158,7 +201,20 @@ public class Business {
 		this.shiftRequests = shiftRequests;
 	}
 
+	public void addShiftRequest (ShiftRequest shiftRequest) {
+		this.getShiftRequests().add(shiftRequest);
+		shiftRequest.setBusiness(this);
+	}
+	
+	public void removeShiftRequest (ShiftRequest shiftRequest) {
+		this.getShiftRequests().remove(shiftRequest);
+		shiftRequest.setBusiness(null);
+	}
+
 	public List<ExtraAbsenceRequest> getExtraAbseceRequests() {
+		if (extraAbseceRequests == null) {
+			extraAbseceRequests = new ArrayList<ExtraAbsenceRequest>();
+		}
 		return extraAbseceRequests;
 	}
 
@@ -166,15 +222,41 @@ public class Business {
 		this.extraAbseceRequests = extraAbseceRequests;
 	}
 
+	public void addExtraAbsenceRequest (ExtraAbsenceRequest extraAbsenceRequest) {
+		this.getExtraAbseceRequests().add(extraAbsenceRequest);
+		extraAbsenceRequest.setBusiness(this);
+	}
+	
+	public void removeExtraAbsenceRequest (ExtraAbsenceRequest extraAbsenceRequest) {
+		this.getExtraAbseceRequests().remove(extraAbsenceRequest);
+		extraAbsenceRequest.setBusiness(null);
+	}
+
 	public List<EmployeeMissingShiftResponse> getMissingShifts() {
+		if (missingShifts == null) {
+			missingShifts = new ArrayList<EmployeeMissingShiftResponse>();
+		}
 		return missingShifts;
 	}
 
 	public void setMissingShifts(List<EmployeeMissingShiftResponse> missingShifts) {
 		this.missingShifts = missingShifts;
 	}
+	
+	public void addMissingShift (EmployeeMissingShiftResponse employeeMissingShiftResponse) {
+		this.getMissingShifts().add(employeeMissingShiftResponse);
+		employeeMissingShiftResponse.setBusiness(this);
+	}
+	
+	public void removeMissingShift (EmployeeMissingShiftResponse employeeMissingShiftResponse) {
+		this.getMissingShifts().remove(employeeMissingShiftResponse);
+		employeeMissingShiftResponse.setBusiness(null);
+	}
 
 	public List<JoinRequest> getJoinRequests() {
+		if (joinRequests == null) {
+			joinRequests = new ArrayList<JoinRequest>();
+		}
 		return joinRequests;
 	}
 
@@ -182,6 +264,15 @@ public class Business {
 		this.joinRequests = joinRequests;
 	}
 
+	public void addJoinRequest (JoinRequest joinRequest) {
+		this.getJoinRequests().add(joinRequest);
+		joinRequest.setBusiness(this);
+	}
+	
+	public void removeJoinRequest (JoinRequest joinRequest) {
+		this.getJoinRequests().remove(joinRequest);
+		joinRequest.setBusiness(null);
+	}
 	public WeeklySchedule getWeeklySchedule() {
 		return weeklySchedule;
 	}
