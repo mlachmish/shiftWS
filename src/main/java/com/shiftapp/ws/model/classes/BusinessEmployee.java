@@ -20,6 +20,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
 
 /**
  * Represent employee in a {@link Business}.
@@ -43,12 +44,14 @@ public class BusinessEmployee {
 	@JoinColumn(name = "business_id")
 	private Business business;
 	
+	@Type(type = "true_false")
 	@Column (name="is_manager")
 	private boolean isManager;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private BusinessEmployee promotingEmployee;
 	
+	@Type(type = "true_false")
 	@Column (name="is_suspended")
 	private boolean isSuspended;
 	
@@ -266,7 +269,9 @@ public class BusinessEmployee {
 	
 	public void addScheduleCrew (ScheduleCrew scheduleCrew) {
 		this.getScheduleCrews().add(scheduleCrew);
-		scheduleCrew.addBusinessEmployee(this);
+		if (!scheduleCrew.getBusinessEmployees().contains(this)) {
+			scheduleCrew.addBusinessEmployee(this);
+		}
 	}
 	
 	public void removeScheduleCrew (ScheduleCrew scheduleCrew) {
@@ -321,17 +326,36 @@ public class BusinessEmployee {
 
 	@Override
 	public String toString() {
-		return "BusinessEmployee [businessEmployeeId=" + businessEmployeeId
-				+ ", user=" + user + ", business=" + business + ", isManager="
-				+ isManager + ", promotingEmployee=" + promotingEmployee
-				+ ", isSuspended=" + isSuspended + ", defaultAbsences="
-				+ defaultAbsences + ", extraAbsences=" + extraAbsences
-				+ ", businessCategories=" + businessCategories
-				+ ", shiftRequest=" + shiftRequest + ", extraAbsenceRequests="
-				+ extraAbsenceRequests + ", missingShifts=" + missingShifts
-				+ ", scheduleCrews=" + scheduleCrews
-				+ ", promotedBusinessEmployees=" + promotedBusinessEmployees
-				+ "]";
+		return "BusinessEmployee [businessEmployeeId="
+				+ businessEmployeeId
+				+ ", "
+				+ (user != null ? "user=" + user + ", " : "")
+				+ (business != null ? "business=" + business + ", " : "")
+				+ "isManager="
+				+ isManager
+				+ ", "
+				+ (promotingEmployee != null ? "promotingEmployee="
+						+ promotingEmployee + ", " : "")
+				+ "isSuspended="
+				+ isSuspended
+				+ ", defaultAbsences="
+				+ defaultAbsences
+				+ ", extraAbsences="
+				+ extraAbsences
+				+ ", "
+				+ (businessCategories != null ? "businessCategories="
+						+ businessCategories + ", " : "")
+				+ (shiftRequest != null ? "shiftRequest=" + shiftRequest + ", "
+						: "")
+				+ (extraAbsenceRequests != null ? "extraAbsenceRequests="
+						+ extraAbsenceRequests + ", " : "")
+				+ (missingShifts != null ? "missingShifts=" + missingShifts
+						+ ", " : "")
+				+ (scheduleCrews != null ? "scheduleCrews=" + scheduleCrews
+						+ ", " : "")
+				+ (promotedBusinessEmployees != null ? "promotedBusinessEmployees="
+						+ promotedBusinessEmployees
+						: "") + "]";
 	}
 
 

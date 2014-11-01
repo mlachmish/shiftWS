@@ -85,7 +85,9 @@ public class ShiftRequest {
 
 	public void addBusinessShift (BusinessShift businessShift) {
 		this.getBusinessShifts().add(businessShift);
-		businessShift.addShiftRequest(this);
+		if (!businessShift.getShiftRequests().contains(this)) {
+			businessShift.addShiftRequest(this);
+		}
 	}
 	
 	public void removeBusinessShift (BusinessShift businessShift) {
@@ -118,9 +120,14 @@ public class ShiftRequest {
 
 	@Override
 	public String toString() {
-		return "ShiftRequest [shiftRequestId=" + shiftRequestId + ", business="
-				+ business + ", businessEmployee=" + businessEmployee
-				+ ", businessShifts=" + businessShifts + "]";
+		return "ShiftRequest [shiftRequestId="
+				+ shiftRequestId
+				+ ", "
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (businessEmployee != null ? "businessEmployee="
+						+ businessEmployee + ", " : "")
+				+ (businessShifts != null ? "businessShifts=" + businessShifts
+						: "") + "]";
 	}
 
 }

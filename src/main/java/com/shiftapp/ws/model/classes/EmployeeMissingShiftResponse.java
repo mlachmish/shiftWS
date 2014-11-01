@@ -135,10 +135,16 @@ public class EmployeeMissingShiftResponse {
 	@Override
 	public String toString() {
 		return "EmployeeMissingShiftResponse [employeeMissingShiftResponeId="
-				+ employeeMissingShiftResponeId + ", businessShift="
-				+ businessShift + ", business=" + business
-				+ ", businessEmployee=" + businessEmployee + ", reason="
-				+ reason + ", requestStatus=" + requestStatus + "]";
+				+ employeeMissingShiftResponeId
+				+ ", "
+				+ (businessShift != null ? "businessShift=" + businessShift
+						+ ", " : "")
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (businessEmployee != null ? "businessEmployee="
+						+ businessEmployee + ", " : "")
+				+ (reason != null ? "reason=" + reason + ", " : "")
+				+ (requestStatus != null ? "requestStatus=" + requestStatus
+						: "") + "]";
 	}
 
 }

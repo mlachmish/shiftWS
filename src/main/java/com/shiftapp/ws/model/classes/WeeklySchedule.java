@@ -42,19 +42,20 @@ public class WeeklySchedule {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "weeklySchedule")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	private List<ScheduleCrew> crews;
+	private List<BusinessShift> businessShifts;
 	
 	@Enumerated (EnumType.STRING)
 	private RequestStatusEnum requestStatus;
 	
 	public WeeklySchedule() {}
 
+
 	public WeeklySchedule(Business business, Date date,
-			List<ScheduleCrew> crews, RequestStatusEnum requestStatus) {
+			List<BusinessShift> businessShifts, RequestStatusEnum requestStatus) {
 		super();
 		this.business = business;
 		this.date = date;
-		this.crews = crews;
+		this.businessShifts = businessShifts;
 		this.requestStatus = requestStatus;
 	}
 
@@ -82,25 +83,25 @@ public class WeeklySchedule {
 		this.date = date;
 	}
 
-	public List<ScheduleCrew> getCrews() {
-		if (crews == null) {
-			crews = new ArrayList<ScheduleCrew>();
+	public List<BusinessShift> getBusinessShifts() {
+		if (businessShifts == null) {
+			businessShifts = new ArrayList<BusinessShift>();
 		}
-		return crews;
+		return businessShifts;
 	}
 
-	public void setCrews(List<ScheduleCrew> crews) {
-		this.crews = crews;
+	public void setBusinessShifts(List<BusinessShift> businessShifts) {
+		this.businessShifts = businessShifts;
 	}
 	
-	public void addCrew (ScheduleCrew Crew) {
-		this.getCrews().add(Crew);
-		Crew.setWeeklySchedule(this);
+	public void addBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().add(businessShift);
+		businessShift.setWeeklySchedule(this);
 	}
 	
-	public void removeCrew (ScheduleCrew Crew) {
-		this.getCrews().remove(Crew);
-		Crew.setWeeklySchedule(null);
+	public void removeBusinessShift (BusinessShift businessShift) {
+		this.getBusinessShifts().remove(businessShift);
+		businessShift.setWeeklySchedule(null);
 	}
 
 	public RequestStatusEnum getRequestStatus() {
@@ -136,9 +137,15 @@ public class WeeklySchedule {
 
 	@Override
 	public String toString() {
-		return "WeeklySchedule [weeklyScheduleId=" + weeklyScheduleId
-				+ ", business=" + business + ", date=" + date + ", schedule="
-				+ crews + ", requestStatus=" + requestStatus + "]";
+		return "WeeklySchedule [weeklyScheduleId="
+				+ weeklyScheduleId
+				+ ", "
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (date != null ? "date=" + date + ", " : "")
+				+ (businessShifts != null ? "businessShifts=" + businessShifts
+						+ ", " : "")
+				+ (requestStatus != null ? "requestStatus=" + requestStatus
+						: "") + "]";
 	}
 
 }

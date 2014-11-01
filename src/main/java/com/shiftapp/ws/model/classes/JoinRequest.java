@@ -105,9 +105,13 @@ public class JoinRequest {
 
 	@Override
 	public String toString() {
-		return "JoinRequest [joinRequestId=" + joinRequestId + ", user=" + user
-				+ ", business=" + business + ", requestStatus=" + requestStatus
-				+ "]";
+		return "JoinRequest [joinRequestId="
+				+ joinRequestId
+				+ ", "
+				+ (user != null ? "user=" + user + ", " : "")
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (requestStatus != null ? "requestStatus=" + requestStatus
+						: "") + "]";
 	}
 
 }

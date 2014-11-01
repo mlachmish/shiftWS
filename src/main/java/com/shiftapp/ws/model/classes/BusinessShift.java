@@ -37,10 +37,6 @@ public class BusinessShift {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column (name="business_shift_id")
 	private long businessShiftId;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "business_id")
-	private Business business;
 
 	@ElementCollection
 	@CollectionTable(name="shiftWeekDays", joinColumns=@JoinColumn(name="business_shift_id"))
@@ -61,6 +57,10 @@ public class BusinessShift {
 			inverseJoinColumns = { @JoinColumn(name = "shift_request_id", 
 					nullable = false, updatable = false) })
 	private List<ShiftRequest> shiftRequests;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "weeklySchedule_id")
+	private WeeklySchedule weeklySchedule;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "businessShift")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
@@ -72,16 +72,18 @@ public class BusinessShift {
 	
 	public BusinessShift() {}
 
-	public BusinessShift(Business business, Set<WeekDayEnum> weekDays,
-			Time startTime, Time endTime, List<ShiftRequest> shiftRequests,
-			List<ScheduleCrew> crews) {
+	public BusinessShift(Set<WeekDayEnum> weekDays, Time startTime,
+			Time endTime, List<ShiftRequest> shiftRequests,
+			WeeklySchedule weeklySchedule, List<ScheduleCrew> crews,
+			List<EmployeeMissingShiftResponse> employeeMissingShiftRespones) {
 		super();
-		this.business = business;
 		this.weekDays = weekDays;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.shiftRequests = shiftRequests;
+		this.weeklySchedule = weeklySchedule;
 		this.crews = crews;
+		this.employeeMissingShiftRespones = employeeMissingShiftRespones;
 	}
 
 	public long getBusinessShiftId() {
@@ -90,14 +92,6 @@ public class BusinessShift {
 
 	public void setBusinessShiftId(long businessShiftId) {
 		this.businessShiftId = businessShiftId;
-	}
-
-	public Business getBusiness() {
-		return business;
-	}
-
-	public void setBusiness(Business business) {
-		this.business = business;
 	}
 
 	public Set<WeekDayEnum> getWeekDays() {
@@ -137,7 +131,9 @@ public class BusinessShift {
 
 	public void addShiftRequest (ShiftRequest shiftRequest) {
 		this.getShiftRequests().add(shiftRequest);
-		shiftRequest.addBusinessShift(this);
+		if (!shiftRequest.getBusinessShifts().contains(this)) {
+			shiftRequest.addBusinessShift(this);
+		}
 	}
 	
 	public void removeShiftRequest (ShiftRequest shiftRequest) {
@@ -164,6 +160,14 @@ public class BusinessShift {
 	public void removeScheduleCrew (ScheduleCrew crew) {
 		this.getCrews().remove(crew);
 		crew.setBusinessShift(null);
+	}
+
+	public WeeklySchedule getWeeklySchedule() {
+		return weeklySchedule;
+	}
+
+	public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
+		this.weeklySchedule = weeklySchedule;
 	}
 
 	public List<EmployeeMissingShiftResponse> getEmployeeMissingShiftRespones() {
@@ -213,12 +217,20 @@ public class BusinessShift {
 
 	@Override
 	public String toString() {
-		return "BusinessShift [businessShiftId=" + businessShiftId
-				+ ", business=" + business + ", weekDays=" + weekDays
-				+ ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", shiftRequests=" + shiftRequests + ", crews=" + crews
-				+ ", employeeMissingShiftRespones="
-				+ employeeMissingShiftRespones + "]";
+		return "BusinessShift [businessShiftId="
+				+ businessShiftId
+				+ ", "
+				+ (weekDays != null ? "weekDays=" + weekDays + ", " : "")
+				+ (startTime != null ? "startTime=" + startTime + ", " : "")
+				+ (endTime != null ? "endTime=" + endTime + ", " : "")
+				+ (shiftRequests != null ? "shiftRequests=" + shiftRequests
+						+ ", " : "")
+				+ (weeklySchedule != null ? "weeklySchedule=" + weeklySchedule
+						+ ", " : "")
+				+ (crews != null ? "crews=" + crews + ", " : "")
+				+ (employeeMissingShiftRespones != null ? "employeeMissingShiftRespones="
+						+ employeeMissingShiftRespones
+						: "") + "]";
 	}
 
 }

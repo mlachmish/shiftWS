@@ -45,10 +45,6 @@ public class Business {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "business")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	private List<BusinessShift> businessShifts;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "business")
-	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<BusinessEmployee> businessEmployees;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "business")
@@ -75,18 +71,16 @@ public class Business {
 
 	public Business(String businessName, String address, String logo,
 			List<BusinessCategory> businessCategories,
-			List<BusinessShift> businessShifts,
 			List<BusinessEmployee> businessEmployees,
 			List<ShiftRequest> shiftRequests,
 			List<ExtraAbsenceRequest> extraAbseceRequests,
-			List<EmployeeMissingShiftResponse> missingShifts, List<JoinRequest> joinRequests,
-			WeeklySchedule weeklySchedule) {
+			List<EmployeeMissingShiftResponse> missingShifts,
+			List<JoinRequest> joinRequests, WeeklySchedule weeklySchedule) {
 		super();
 		this.businessName = businessName;
 		this.address = address;
 		this.logo = logo;
 		this.businessCategories = businessCategories;
-		this.businessShifts = businessShifts;
 		this.businessEmployees = businessEmployees;
 		this.shiftRequests = shiftRequests;
 		this.extraAbseceRequests = extraAbseceRequests;
@@ -148,27 +142,6 @@ public class Business {
 		businessCategory.setBusiness(null);
 	}
 
-	public List<BusinessShift> getBusinessShifts() {
-		if (businessShifts == null) {
-			businessShifts = new ArrayList<BusinessShift>();
-		}
-		return businessShifts;
-	}
-
-	public void setBusinessShifts(List<BusinessShift> businessShifts) {
-		this.businessShifts = businessShifts;
-	}
-
-	public void addBusinessShift (BusinessShift businessShift) {
-		this.getBusinessShifts().add(businessShift);
-		businessShift.setBusiness(this);
-	}
-	
-	public void removeBusinessShift (BusinessShift businessShift) {
-		this.getBusinessShifts().remove(businessShift);
-		businessShift.setBusiness(null);
-	}
-	
 	public List<BusinessEmployee> getBusinessEmployees() {
 		if (businessEmployees == null) {
 			businessEmployees = new ArrayList<BusinessEmployee>();
@@ -305,14 +278,27 @@ public class Business {
 
 	@Override
 	public String toString() {
-		return "Business [businessId=" + businessId + ", businessName="
-				+ businessName + ", address=" + address + ", logo=" + logo
-				+ ", businessCategories=" + businessCategories
-				+ ", businessShifts=" + businessShifts + ", businessEmployees="
-				+ businessEmployees + ", shiftRequests=" + shiftRequests
-				+ ", extraAbseceRequests=" + extraAbseceRequests
-				+ ", missingShifts=" + missingShifts + ", joinRequests="
-				+ joinRequests + ", weeklySchedule=" + weeklySchedule + "]";
+		return "Business [businessId="
+				+ businessId
+				+ ", "
+				+ (businessName != null ? "businessName=" + businessName + ", "
+						: "")
+				+ (address != null ? "address=" + address + ", " : "")
+				+ (logo != null ? "logo=" + logo + ", " : "")
+				+ (businessCategories != null ? "businessCategories="
+						+ businessCategories + ", " : "")
+				+ (businessEmployees != null ? "businessEmployees="
+						+ businessEmployees + ", " : "")
+				+ (shiftRequests != null ? "shiftRequests=" + shiftRequests
+						+ ", " : "")
+				+ (extraAbseceRequests != null ? "extraAbseceRequests="
+						+ extraAbseceRequests + ", " : "")
+				+ (missingShifts != null ? "missingShifts=" + missingShifts
+						+ ", " : "")
+				+ (joinRequests != null ? "joinRequests=" + joinRequests + ", "
+						: "")
+				+ (weeklySchedule != null ? "weeklySchedule=" + weeklySchedule
+						: "") + "]";
 	}
 
 }

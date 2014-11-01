@@ -95,7 +95,9 @@ public class BusinessCategory {
 	
 	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
 		this.getBusinessEmployees().add(businessEmployee);
-		businessEmployee.addBusinessCategory(this);
+		if (!businessEmployee.getBusinessCategories().contains(this)) {
+			businessEmployee.addBusinessCategory(this);
+		}
 	}
 	
 	public void removeBusinessEmployee (BusinessEmployee scheduleCrew) {
@@ -149,10 +151,16 @@ public class BusinessCategory {
 
 	@Override
 	public String toString() {
-		return "BusinessCategory [businessCategoryId=" + businessCategoryId
-				+ ", business=" + business + ", categoryName=" + categoryName
-				+ ", businessEmployees=" + businessEmployees
-				+ ", scheduleCrews=" + scheduleCrews + "]";
+		return "BusinessCategory [businessCategoryId="
+				+ businessCategoryId
+				+ ", "
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (categoryName != null ? "categoryName=" + categoryName + ", "
+						: "")
+				+ (businessEmployees != null ? "businessEmployees="
+						+ businessEmployees + ", " : "")
+				+ (scheduleCrews != null ? "scheduleCrews=" + scheduleCrews
+						: "") + "]";
 	}
 
 }

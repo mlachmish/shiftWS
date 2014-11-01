@@ -180,6 +180,9 @@ public class User {
 	public void setPhoneNumberAuthentication(
 			PhoneNumberAuthentication phoneNumberAuthentication) {
 		this.phoneNumberAuthentication = phoneNumberAuthentication;
+		if (phoneNumberAuthentication.getUser() != this) {
+			phoneNumberAuthentication.setUser(this);
+		}
 	}
 
 	public JoinRequest getJoinRequest() {
@@ -222,13 +225,26 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", countryCode=" + countryCode
-				+ ", phoneNumber=" + phoneNumber + ", pic=" + pic
-				+ ", businessEmployees=" + businessEmployees
-				+ ", fbAccessToken=" + fbAccessToken + ", accessToken="
-				+ accessToken + ", phoneNumberAuthentication="
-				+ phoneNumberAuthentication + ", joinRequest=" + joinRequest
+		return "User [userId="
+				+ userId
+				+ ", "
+				+ (firstName != null ? "firstName=" + firstName + ", " : "")
+				+ (lastName != null ? "lastName=" + lastName + ", " : "")
+				+ (countryCode != null ? "countryCode=" + countryCode + ", "
+						: "")
+				+ (phoneNumber != null ? "phoneNumber=" + phoneNumber + ", "
+						: "")
+				+ (pic != null ? "pic=" + pic + ", " : "")
+				+ (businessEmployees != null ? "businessEmployees="
+						+ businessEmployees + ", " : "")
+				+ (fbAccessToken != null ? "fbAccessToken=" + fbAccessToken
+						+ ", " : "")
+				+ (accessToken != null ? "accessToken=" + accessToken + ", "
+						: "")
+				+ (phoneNumberAuthentication != null ? "phoneNumberAuthentication="
+						+ phoneNumberAuthentication + ", "
+						: "")
+				+ (joinRequest != null ? "joinRequest=" + joinRequest : "")
 				+ "]";
 	}
 

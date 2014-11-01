@@ -30,10 +30,6 @@ public class ScheduleCrew {
 	private long scheduleCrewId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "weeklySchedule_id")
-	private WeeklySchedule weeklySchedule;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "business_shift_id")
 	private BusinessShift businessShift;
 	
@@ -50,11 +46,10 @@ public class ScheduleCrew {
 	
 	public ScheduleCrew() {}
 
-	public ScheduleCrew(WeeklySchedule weeklySchedule,
-			BusinessShift businessShift, BusinessCategory businessCategory,
+	public ScheduleCrew(BusinessShift businessShift,
+			BusinessCategory businessCategory,
 			List<BusinessEmployee> businessEmployees, WeekDayEnum weekDay) {
 		super();
-		this.weeklySchedule = weeklySchedule;
 		this.businessShift = businessShift;
 		this.businessCategory = businessCategory;
 		this.businessEmployees = businessEmployees;
@@ -67,14 +62,6 @@ public class ScheduleCrew {
 
 	public void setScheduleCrewId(long scheduleCrewId) {
 		this.scheduleCrewId = scheduleCrewId;
-	}
-
-	public WeeklySchedule getWeeklySchedule() {
-		return weeklySchedule;
-	}
-
-	public void setWeeklySchedule(WeeklySchedule weeklySchedule) {
-		this.weeklySchedule = weeklySchedule;
 	}
 
 	public BusinessShift getBusinessShift() {
@@ -106,7 +93,9 @@ public class ScheduleCrew {
 	
 	public void addBusinessEmployee (BusinessEmployee businessEmployee) {
 		this.getBusinessEmployees().add(businessEmployee);
-		businessEmployee.addScheduleCrew(this);
+		if (!businessEmployee.getScheduleCrews().contains(this)) {
+			businessEmployee.addScheduleCrew(this);
+		}
 	}
 	
 	public void removeBusinessEmployee (BusinessEmployee businessEmployee) {
@@ -147,11 +136,16 @@ public class ScheduleCrew {
 
 	@Override
 	public String toString() {
-		return "ScheduleCrew [scheduleCrewId=" + scheduleCrewId
-				+ ", weeklySchedule=" + weeklySchedule + ", businessShift="
-				+ businessShift + ", businessCategory=" + businessCategory
-				+ ", businessEmployee=" + businessEmployees + ", weekDay="
-				+ weekDay + "]";
+		return "ScheduleCrew [scheduleCrewId="
+				+ scheduleCrewId
+				+ ", "
+				+ (businessShift != null ? "businessShift=" + businessShift
+						+ ", " : "")
+				+ (businessCategory != null ? "businessCategory="
+						+ businessCategory + ", " : "")
+				+ (businessEmployees != null ? "businessEmployees="
+						+ businessEmployees + ", " : "")
+				+ (weekDay != null ? "weekDay=" + weekDay : "") + "]";
 	}
 
 }

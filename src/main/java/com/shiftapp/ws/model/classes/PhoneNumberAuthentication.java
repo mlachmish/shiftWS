@@ -41,13 +41,10 @@ public class PhoneNumberAuthentication {
 	@Column (name="is_authenticaed")
 	private boolean isAuthenticated;
 	
-	public PhoneNumberAuthentication() {}
-
-	public PhoneNumberAuthentication(User user, boolean isAuthenticated) {
+	public PhoneNumberAuthentication() {
 		super();
-		this.user = user;
 		this.authenticationCode = Integer.toString(rand.nextInt(10000));
-		this.isAuthenticated = isAuthenticated;
+		this.isAuthenticated = false;
 	}
 
 	public long getNumberAuthenticationId() {
@@ -64,6 +61,9 @@ public class PhoneNumberAuthentication {
 
 	public void setUser(User user) {
 		this.user = user;
+		if (user.getPhoneNumberAuthentication() != this) {
+			user.setPhoneNumberAuthentication(this);
+		}
 	}
 
 	public String getAuthenticationCode() {
@@ -80,6 +80,11 @@ public class PhoneNumberAuthentication {
 
 	public void setAuthenticated(boolean isAuthenticated) {
 		this.isAuthenticated = isAuthenticated;
+	}
+	
+	public void regenrate() {
+		this.authenticationCode = Integer.toString(rand.nextInt(10000));
+		this.isAuthenticated = false;
 	}
 
 	@Override
@@ -109,9 +114,12 @@ public class PhoneNumberAuthentication {
 	@Override
 	public String toString() {
 		return "PhoneNumberAuthentication [numberAuthenticationId="
-				+ numberAuthenticationId + ", user=" + user
-				+ ", authenticationCode=" + authenticationCode
-				+ ", isAuthenticated=" + isAuthenticated + "]";
+				+ numberAuthenticationId
+				+ ", "
+				+ (user != null ? "user=" + user + ", " : "")
+				+ (authenticationCode != null ? "authenticationCode="
+						+ authenticationCode + ", " : "") + "isAuthenticated="
+				+ isAuthenticated + "]";
 	}
 
 }

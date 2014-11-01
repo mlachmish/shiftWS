@@ -130,10 +130,17 @@ public class ExtraAbsenceRequest {
 	@Override
 	public String toString() {
 		return "ExtraAbsenceRequest [extraAbsenceRequestId="
-				+ extraAbsenceRequestId + ", business=" + business
-				+ ", businessEmployee=" + businessEmployee + ", extraAmount="
-				+ extraAmount + ", reason=" + reason + ", requestStatus="
-				+ requestStatus + "]";
+				+ extraAbsenceRequestId
+				+ ", "
+				+ (business != null ? "business=" + business + ", " : "")
+				+ (businessEmployee != null ? "businessEmployee="
+						+ businessEmployee + ", " : "")
+				+ "extraAmount="
+				+ extraAmount
+				+ ", "
+				+ (reason != null ? "reason=" + reason + ", " : "")
+				+ (requestStatus != null ? "requestStatus=" + requestStatus
+						: "") + "]";
 	}
 
 }

@@ -25,18 +25,18 @@
    <property name="hibernate.hbm2ddl.auto">create</property>
 
    <!-- List of annotated mapped classes -->
-   <mapping class="com.shiftapp.ws.model.Business"/>
-   <mapping class="com.shiftapp.ws.model.BusinessCategory"/>
-   <mapping class="com.shiftapp.ws.model.BusinessEmployee"/>
-   <mapping class="com.shiftapp.ws.model.BusinessShift"/>
-   <mapping class="com.shiftapp.ws.model.ExtraAbsenceRequest"/>
-   <mapping class="com.shiftapp.ws.model.JoinRequest"/>
-   <mapping class="com.shiftapp.ws.model.MissingShift"/>
-   <mapping class="com.shiftapp.ws.model.PhoneNumberAuthentication"/>
-   <mapping class="com.shiftapp.ws.model.ScheduleCrew"/>
-   <mapping class="com.shiftapp.ws.model.ShiftRequest"/>
-   <mapping class="com.shiftapp.ws.model.User"/>
-   <mapping class="com.shiftapp.ws.model.WeeklySchedule"/>
+   <mapping class="com.shiftapp.ws.model.classes.Business"/>
+   <mapping class="com.shiftapp.ws.model.classes.BusinessCategory"/>
+   <mapping class="com.shiftapp.ws.model.classes.BusinessEmployee"/>
+   <mapping class="com.shiftapp.ws.model.classes.BusinessShift"/>
+   <mapping class="com.shiftapp.ws.model.classes.ExtraAbsenceRequest"/>
+   <mapping class="com.shiftapp.ws.model.classes.JoinRequest"/>
+   <mapping class="com.shiftapp.ws.model.classes.PhoneNumberAuthentication"/>
+   <mapping class="com.shiftapp.ws.model.classes.EmployeeMissingShiftResponse"/>
+   <mapping class="com.shiftapp.ws.model.classes.ScheduleCrew"/>
+   <mapping class="com.shiftapp.ws.model.classes.ShiftRequest"/>
+   <mapping class="com.shiftapp.ws.model.classes.User"/>
+   <mapping class="com.shiftapp.ws.model.classes.WeeklySchedule"/>
    
 </session-factory>
 </hibernate-configuration>

@@ -23,6 +23,13 @@ import org.hibernate.internal.util.compare.EqualsHelper;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mysql.fabric.xmlrpc.base.Array;
+import com.shiftapp.ws.model.classes.Business;
+import com.shiftapp.ws.model.classes.BusinessCategory;
+import com.shiftapp.ws.model.classes.BusinessEmployee;
+import com.shiftapp.ws.model.classes.BusinessShift;
+import com.shiftapp.ws.model.classes.EmployeeMissingShiftResponse;
+import com.shiftapp.ws.model.classes.ScheduleCrew;
+import com.shiftapp.ws.model.classes.User;
 import com.shiftapp.ws.model.classes.WeeklySchedule;
 import com.shiftapp.ws.model.enums.CountryCodeEnum;
 
@@ -45,34 +52,71 @@ public class Main {
       Transaction tx = null;
       try{
          tx = session.beginTransaction();
-//         User u1 = new User("Matan", "Lachmish", "972", "123", "/sad/asd.jpeg");
-//         session.persist(u1);
-//         User u2 = new User("Mike", "Himi", "972", "555", "/sad/bab.jpeg");
-//         session.persist(u2);
-//         Business b = new Business("El gaucho", "somewhere", "/asd/logo.jeg");
-//         session.persist(b);
-//         Map<Long, Integer> crew = new HashMap<>();
-//         crew.put((long) 1, 2);
-//         crew.put((long) 3, 8);
-//         Set<Integer> days = new HashSet<>();
-//         days.add(14);
-//         days.add(22);
-//         BusinessShift shift = new BusinessShift(1, days, Time.valueOf( "08:00:00" ), Time.valueOf( "14:30:00" ), crew);
-//         session.persist(shift);
-//         
-//         Set<Integer> days2 = new HashSet<>();
-//         days2.add(214);
-//         days2.add(222);
-//         BusinessShift shift2 = new BusinessShift(1, days2, Time.valueOf( "18:00:00" ), Time.valueOf( "24:30:00" ), crew);
-//         session.persist(shift2);
-//         ExtraAbsenceRequest e = new ExtraAbsenceRequest(3, 2, "just cause", RequestStatusEnum.Pending);
-//         session.persist(e);
-         
-//         WeeklySchedule ws = new WeeklySchedule(1, new Date(), null, RequestStatusEnum.Approved);
-//         ScheduleCrew crew1 = new ScheduleCrew((long)1, (long)1, (long)1, WeekDayEnum.Sun, Arrays.asList((long)1,(long)2,(long)3,(long)4), ws);
-//         ScheduleCrew crew2 = new ScheduleCrew(1, 1, 2, WeekDayEnum.Sun, Arrays.asList((long)5,(long)6,(long)7,(long)8), ws);
-//         ws.setSchedule(Arrays.asList(crew1,crew2));
-//         session.persist(ws);
+        User u1 = new User();
+        u1.setFirstName("Matan");
+        u1.setLastName("Lachmish");
+        u1.setCountryCode(CountryCodeEnum.getInstance("+972"));
+        u1.setPhoneNumber("123");
+        
+        session.persist(u1);
+ 		Business business = new Business();
+ 		business.setBusinessName("Test Business");
+ 		business.setAddress("Somewhere");
+
+ 		BusinessCategory waiter = new BusinessCategory();
+ 		waiter.setCategoryName("Waiter");
+ 		BusinessCategory manager = new BusinessCategory();
+ 		manager.setCategoryName("Manager");
+ 		business.addBusinessCategory(waiter);
+ 		business.addBusinessCategory(manager);
+ 		
+ 		BusinessEmployee emp1 = new BusinessEmployee();
+ 		emp1.addBusinessCategory(waiter);
+ 		emp1.addBusinessCategory(manager);
+ 		emp1.setManager(true);
+ 		BusinessEmployee emp2 = new BusinessEmployee();
+ 		emp2.addBusinessCategory(waiter);
+ 		business.addBusinessEmployee(emp1);
+ 		business.addBusinessEmployee(emp2);
+ 		
+ 		ScheduleCrew crew1 = new ScheduleCrew();
+ 		crew1.setBusinessCategory(waiter);
+ 		crew1.addBusinessEmployee(emp1);
+ 		crew1.addBusinessEmployee(emp2);
+ 		ScheduleCrew crew2 = new ScheduleCrew();
+ 		crew2.setBusinessCategory(manager);
+ 		crew2.addBusinessEmployee(emp1);
+ 		ScheduleCrew crew3 = new ScheduleCrew();
+ 		crew3.setBusinessCategory(manager);
+
+ 		BusinessShift shift1 = new BusinessShift();
+ 		BusinessShift shift2 = new BusinessShift();
+ 		shift1.addScheduleCrew(crew1);
+ 		shift1.addScheduleCrew(crew2);
+ 		shift2.addScheduleCrew(crew3);
+ 		
+ 		WeeklySchedule weekSchedule = new WeeklySchedule();
+ 		weekSchedule.addBusinessShift(shift1);
+ 		weekSchedule.addBusinessShift(shift2);
+ 		business.setWeeklySchedule(weekSchedule);
+
+ 		EmployeeMissingShiftResponse missingShiftEmp1 = new EmployeeMissingShiftResponse();
+ 		missingShiftEmp1.setBusinessEmployee(emp1);
+ 		missingShiftEmp1.setBusinessShift(shift1);
+ 		missingShiftEmp1.setReason("At a wedding");
+ 		EmployeeMissingShiftResponse missingShiftEmp2 = new EmployeeMissingShiftResponse();
+ 		missingShiftEmp2.setBusinessEmployee(emp2);
+ 		missingShiftEmp2.setBusinessShift(shift1);
+ 		missingShiftEmp2.setReason("Have a test");
+ 		EmployeeMissingShiftResponse missingShiftEmp3 = new EmployeeMissingShiftResponse();
+ 		missingShiftEmp3.setBusinessEmployee(emp2);
+ 		missingShiftEmp3.setBusinessShift(shift2);
+ 		missingShiftEmp3.setReason("Have a test");
+ 		business.addMissingShift(missingShiftEmp1);
+ 		business.addMissingShift(missingShiftEmp2);
+ 		business.addMissingShift(missingShiftEmp3);
+ 		
+ 		session.save(business);
          tx.commit();
       }catch (HibernateException e) {
          if (tx!=null) tx.rollback();
@@ -80,24 +124,5 @@ public class Main {
       }finally {
          session.close(); 
       }
-      
-      tx = null;
-      session = sessionFactory.openSession();
-      try{
-          tx = session.beginTransaction();
-          Criteria cr = session.createCriteria(WeeklySchedule.class).add(Restrictions.eq("businessId", (long)1));
-          List list = cr.list();
-          for (WeeklySchedule weeklySchedule : (List<WeeklySchedule>)list) {
-			System.out.println("!@#!@# " + weeklySchedule);
-			System.out.println(weeklySchedule.getSchedule());
-		}
-          tx.commit();
-       }catch (HibernateException e) {
-          if (tx!=null) tx.rollback();
-          e.printStackTrace(); 
-       }finally {
-          session.close(); 
-       }
-//      sessionFactory.close();
    }
 }

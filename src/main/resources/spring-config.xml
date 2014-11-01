@@ -2,17 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 <!--###  ###-->
 
 <context:annotation-config />
 <context:property-placeholder location="classpath:database.properties" />
+<!--### Authentication ###-->
+<bean id="authenticator" class="com.shiftapp.ws.authentication.Authenticator"></bean>
 
 <!--### MessegingService ###-->
 <bean id="SMSMessagingService" class="com.shiftapp.ws.messaging.SMSMessagingService">
@@ -26,10 +31,16 @@
 </bean>
 
 <!--### RESTful api ###-->
-<bean id="signUpAPI" class="com.shiftapp.ws.api.SignUpAPI"></bean>
+<bean id="identificationAPI" class="com.shiftapp.ws.api.IdentificationAPI"></bean>
+<bean id="weekInfoAPI" class="com.shiftapp.ws.api.WeekViewAPI"></bean>
+
 
 <!--### Services ###-->
-<bean id="signUpService" class="com.shiftapp.ws.service.SignUpService"></bean>
+<bean id="identificationService" class="com.shiftapp.ws.service.identification.IdentificationService">
+	<property name="userPicPath" value="${identificationService.userPicPath}" /> 
+</bean>
+
+<bean id="weekInfoService" class="com.shiftapp.ws.service.weekinfo.WeekInfoService"></bean>
 
 <!--### Hibernate config ###-->
 <bean id="dataSource"  
